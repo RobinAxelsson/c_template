@@ -1,3 +1,5 @@
+#Note no spaces allowed in file names
+
 CC = gcc
 CFLAGS = -Wall -Wextra -I./src
 OUT = a.out
@@ -12,6 +14,7 @@ SRC_FILES = $(wildcard $(SRC_DIR)/*.c)
 OBJ_FILES = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRC_FILES))
 TEST_FILES = $(wildcard $(TEST_DIR)/*.c)
 TEST_OBJ_FILES = $(patsubst $(TEST_DIR)/%.c, $(TEST_OBJ_DIR)/%.o, $(TEST_FILES))
+TEST_BINARIES = $(patsubst $(TEST_DIR)/%.c, $(TEST_BIN_DIR)/%, $(TEST_FILES))
 NON_MAIN_SRC_FILES = $(filter-out $(SRC_DIR)/main.c, $(SRC_FILES))
 
 # Directories
@@ -33,15 +36,15 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # Test target
-test: $(TEST_BIN_DIR)/$(OUT)
+test: $(TEST_BINARIES)
+
+# Compile each test source file into a separate executable
+$(TEST_BIN_DIR)/%: $(TEST_OBJ_DIR)/%.o $(NON_MAIN_SRC_FILES) | $(TEST_BIN_DIR)
+	$(CC) $(CFLAGS) -o $@ $< $(NON_MAIN_SRC_FILES)
 
 # Compile test object files
 $(TEST_OBJ_DIR)/%.o: $(TEST_DIR)/%.c | $(TEST_OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
-
-# Compile test files into executables
-$(TEST_BIN_DIR)/$(OUT): $(TEST_OBJ_FILES) $(NON_MAIN_SRC_FILES) | $(TEST_BIN_DIR)
-	$(CC) $(CFLAGS) -o $@ $(TEST_OBJ_FILES) $(NON_MAIN_SRC_FILES)
 
 # Clean up
 .PHONY: clean

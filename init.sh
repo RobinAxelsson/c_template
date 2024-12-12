@@ -1,4 +1,4 @@
 #!/bin/bash
 
-alias run="make && ./src/bin/raxshell"
-alias test="make test"
+alias run="make && ./src/bin/a.out"
+alias test="make test && ./scripts/test.sh"
