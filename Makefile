@@ -46,6 +46,9 @@ $(TEST_BIN_DIR)/%: $(TEST_OBJ_DIR)/%.o $(NON_MAIN_SRC_FILES) | $(TEST_BIN_DIR)
 $(TEST_OBJ_DIR)/%.o: $(TEST_DIR)/%.c | $(TEST_OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
+# Ensure test binaries depend on object files
+$(TEST_BINARIES): $(TEST_OBJ_FILES)
+
 # Clean up
 .PHONY: clean
 clean:
