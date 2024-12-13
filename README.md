@@ -1,1 +1,1 @@
-# Shell project
+# Template for C
